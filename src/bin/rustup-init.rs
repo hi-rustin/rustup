@@ -28,7 +28,6 @@ use rustup::cli::setup_mode;
 use rustup::currentprocess::{process, with, OSProcess};
 use rustup::env_var::RUST_RECURSION_COUNT_MAX;
 use rustup::utils::utils;
-use rustup::TOOLS;
 
 fn main() {
     let process = OSProcess::default();
@@ -93,13 +92,7 @@ fn run_rustup_inner() -> Result<utils::ExitCode> {
                 }
             }
         }
-        Some(n) => {
-            if TOOLS.iter().find(|&&name| name == n).is_some() {
-                proxy_mode::main()
-            } else {
-                Err(ErrorKind::UnknownProxyName(n.to_string()).into())
-            }
-        }
+        Some(_) => proxy_mode::main(),
         None => {
             // Weird case. No arg0, or it's unparsable.
             Err(ErrorKind::NoExeName.into())
